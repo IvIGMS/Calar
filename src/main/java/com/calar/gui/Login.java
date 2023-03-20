@@ -167,7 +167,18 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-        ConnectionDB.conect();
+        String password_ = new String(password.getPassword());
+        // Llamamos a login.
+        if (ConnectionDB.login(email.getText(), password_)){
+            System.out.println("Ha entrado a su cuenta.");
+            MainView main = new MainView(email.getText());
+            main.setVisible(true);
+            main.setLocationRelativeTo(null);
+            this.dispose();
+        } else {
+            System.out.println("Credenciales incorrectos.");
+        }
+        
     }//GEN-LAST:event_btnLoginActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

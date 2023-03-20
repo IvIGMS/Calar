@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.calar.gui;
 
 import com.calar.logic.User;
 import com.calar.logic.Validations;
+import com.calar.persistence.ConnectionDB;
 import javax.swing.JOptionPane;
 
 /**
@@ -53,6 +50,7 @@ public class CreateUser extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(900, 500));
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(61, 152, 233));
         jPanel1.setPreferredSize(new java.awt.Dimension(900, 500));
@@ -258,15 +256,14 @@ public class CreateUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         // Funcionalidad para crear un usuario.
         if (validateAll()){
+            
+            // Borramos las responses.           
+            String password1_ = new String(password1.getPassword());
+            User user = new User(email.getText(), nombre.getText(), apellido.getText(), password1_);
+            ConnectionDB.createUser(user);
             responseSuccess.setText("Usuario creado correctamente\nPuede iniciar sesión");
             JOptionPane.showMessageDialog(null, "Usuario creado correctamente\nPuede iniciar sesión");
             this.dispose();
-            // Borramos las responses.
-            
-            char[] passwordChars1 = password1.getPassword();
-            String password1_ = new String(passwordChars1);
-            User user = new User(email.getText(), nombre.getText(), apellido.getText(), password1_);
-            System.out.println("Hemos creado el user");
         }
         
         
@@ -286,11 +283,8 @@ public class CreateUser extends javax.swing.JFrame {
 
     private boolean validateAll(){
         int validator = 0;
-        char[] passwordChars1 = password1.getPassword();
-        String password1_ = new String(passwordChars1);
-        
-        char[] passwordChars2 = password2.getPassword();
-        String password2_ = new String(passwordChars2);
+        String password1_ = new String(password1.getPassword());
+        String password2_ = new String(password2.getPassword());
         
         if (password1_.equals(password2_)){
             responsePasswordDistinct.setText("");
