@@ -12,7 +12,7 @@ import java.sql.*;
  * @author ivanfriasgil
  */
 public class ConnectionDB {
-    private static final String URL_DB = "jdbc:mysql://localhost:3306/calar";
+    private static final String URL_DB = "jdbc:mysql://localhost/calar?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private static final String USUARIO_DB = "ivan@frias";
     private static final String PASSWORD_DB = "$tcabberR1";
     
@@ -71,6 +71,34 @@ public class ConnectionDB {
         } catch (SQLException ex) {
             System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
             return false;
+        }
+    }
+    
+    public static User getUser(String email_){
+        try {
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            // Operaciones:
+            PreparedStatement statement = cn.prepareStatement("Select * from calar.user where mail = '" + email_ + "'");
+            // Guardamos la query en resultado
+            ResultSet resultado = statement.executeQuery();
+            
+            // Cogemos la primera tupla de que nos arroja la query.
+            resultado.next();
+            String email = resultado.getString(1);
+            String name = resultado.getString(2);
+            String surName = resultado.getString(3);
+            String password = resultado.getString(4);
+            
+            resultado.close(); // Cerramos el resultSet
+            cn.close(); // Cerramos conexión.
+            
+            // Si el user y el passord coinciden con un registro de nuestra bbdd
+            // Podemos entrar a la app.
+            return new User(email, name, surName);
+            
+        } catch (SQLException ex) {
+            System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
+            return new User("none","none","none");
         }
     }
 }

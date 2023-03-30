@@ -4,6 +4,7 @@
  */
 package com.calar.gui;
 
+import com.calar.logic.Encrypt;
 import com.calar.persistence.ConnectionDB;
 
 /**
@@ -168,8 +169,9 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
         String password_ = new String(password.getPassword());
+        String passwordHash = Encrypt.encryptPassword(password_);
         // Llamamos a login.
-        if (ConnectionDB.login(email.getText(), password_)){
+        if (ConnectionDB.login(email.getText(), passwordHash)){
             System.out.println("Ha entrado a su cuenta.");
             MainView main = new MainView(email.getText());
             main.setVisible(true);

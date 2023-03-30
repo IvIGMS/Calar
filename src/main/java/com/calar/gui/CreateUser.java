@@ -1,5 +1,6 @@
 package com.calar.gui;
 
+import com.calar.logic.Encrypt;
 import com.calar.logic.User;
 import com.calar.logic.Validations;
 import com.calar.persistence.ConnectionDB;
@@ -256,10 +257,10 @@ public class CreateUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         // Funcionalidad para crear un usuario.
         if (validateAll()){
-            
             // Borramos las responses.           
             String password1_ = new String(password1.getPassword());
-            User user = new User(email.getText(), nombre.getText(), apellido.getText(), password1_);
+            String passwordHash = Encrypt.encryptPassword(password1_);
+            User user = new User(email.getText(), nombre.getText(), apellido.getText(), passwordHash);
             ConnectionDB.createUser(user);
             responseSuccess.setText("Usuario creado correctamente\nPuede iniciar sesión");
             JOptionPane.showMessageDialog(null, "Usuario creado correctamente\nPuede iniciar sesión");

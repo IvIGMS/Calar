@@ -4,21 +4,23 @@
  */
 package com.calar.gui;
 
+import com.calar.logic.User;
+import com.calar.persistence.ConnectionDB;
+
 /**
  *
  * @author ivanfriasgil
  */
 public class MainView extends javax.swing.JFrame {
-    
-    private String email;
+    User user;
     /**
      * Creates new form Main
      */
     public MainView(String email) {
-        this.email=email;
+        user = ConnectionDB.getUser(email);
         this.setResizable(false);
         initComponents();
-        greeting.setText("Hey " + email + ".\nDo you miss me?");
+        greeting.setText("Hey: " + user.getName() + "");
     }
 
     /**
@@ -31,32 +33,86 @@ public class MainView extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        facturas = new javax.swing.JPanel();
         greeting = new javax.swing.JLabel();
+        gastos = new javax.swing.JPanel();
+        metricas = new javax.swing.JPanel();
+        inventario = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setSize(new java.awt.Dimension(1280, 720));
 
-        greeting.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         greeting.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        greeting.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        greeting.setLocation(new java.awt.Point(0, 0));
+
+        javax.swing.GroupLayout facturasLayout = new javax.swing.GroupLayout(facturas);
+        facturas.setLayout(facturasLayout);
+        facturasLayout.setHorizontalGroup(
+            facturasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(facturasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(greeting, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(914, Short.MAX_VALUE))
+        );
+        facturasLayout.setVerticalGroup(
+            facturasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(facturasLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(greeting, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(626, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Facturas", facturas);
+
+        javax.swing.GroupLayout gastosLayout = new javax.swing.GroupLayout(gastos);
+        gastos.setLayout(gastosLayout);
+        gastosLayout.setHorizontalGroup(
+            gastosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1280, Short.MAX_VALUE)
+        );
+        gastosLayout.setVerticalGroup(
+            gastosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 690, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Gastos", gastos);
+
+        javax.swing.GroupLayout metricasLayout = new javax.swing.GroupLayout(metricas);
+        metricas.setLayout(metricasLayout);
+        metricasLayout.setHorizontalGroup(
+            metricasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1280, Short.MAX_VALUE)
+        );
+        metricasLayout.setVerticalGroup(
+            metricasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 690, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Métricas", metricas);
+
+        javax.swing.GroupLayout inventarioLayout = new javax.swing.GroupLayout(inventario);
+        inventario.setLayout(inventarioLayout);
+        inventarioLayout.setHorizontalGroup(
+            inventarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1280, Short.MAX_VALUE)
+        );
+        inventarioLayout.setVerticalGroup(
+            inventarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 690, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Inventario", inventario);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(265, 265, 265)
-                .addComponent(greeting, javax.swing.GroupLayout.PREFERRED_SIZE, 721, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(294, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(173, 173, 173)
-                .addComponent(greeting, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(219, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -78,7 +134,12 @@ public class MainView extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel facturas;
+    private javax.swing.JPanel gastos;
     private javax.swing.JLabel greeting;
+    private javax.swing.JPanel inventario;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel metricas;
     // End of variables declaration//GEN-END:variables
 }
