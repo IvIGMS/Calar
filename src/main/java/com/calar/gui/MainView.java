@@ -12,7 +12,7 @@ import com.calar.persistence.ConnectionDB;
  * @author ivanfriasgil
  */
 public class MainView extends javax.swing.JFrame {
-    User user;
+    private User user;
     /**
      * Creates new form Main
      */
@@ -20,7 +20,7 @@ public class MainView extends javax.swing.JFrame {
         user = ConnectionDB.getUser(email);
         this.setResizable(false);
         initComponents();
-        greeting.setText("Hey: " + user.getName() + "");
+        greeting.setText("Bienvenido a Calar " + user.getName() + "");
     }
 
     /**
@@ -33,86 +33,95 @@ public class MainView extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        facturas = new javax.swing.JPanel();
         greeting = new javax.swing.JLabel();
-        gastos = new javax.swing.JPanel();
-        metricas = new javax.swing.JPanel();
-        inventario = new javax.swing.JPanel();
+        question = new javax.swing.JLabel();
+        facturas = new javax.swing.JButton();
+        inventario = new javax.swing.JButton();
+        gastos = new javax.swing.JButton();
+        metricas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1280, 720));
         setSize(new java.awt.Dimension(1280, 720));
 
+        greeting.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         greeting.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        greeting.setText("Bienvenido a Calar Jon Doe.");
+        greeting.setToolTipText("");
 
-        javax.swing.GroupLayout facturasLayout = new javax.swing.GroupLayout(facturas);
-        facturas.setLayout(facturasLayout);
-        facturasLayout.setHorizontalGroup(
-            facturasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(facturasLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(greeting, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(914, Short.MAX_VALUE))
-        );
-        facturasLayout.setVerticalGroup(
-            facturasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(facturasLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(greeting, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(626, Short.MAX_VALUE))
-        );
+        question.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        question.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        question.setText("¿Qué quiere gestionar?");
+        question.setToolTipText("");
 
-        jTabbedPane1.addTab("Facturas", facturas);
+        facturas.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        facturas.setText("FACTURAS");
+        facturas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                facturasActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout gastosLayout = new javax.swing.GroupLayout(gastos);
-        gastos.setLayout(gastosLayout);
-        gastosLayout.setHorizontalGroup(
-            gastosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1280, Short.MAX_VALUE)
-        );
-        gastosLayout.setVerticalGroup(
-            gastosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 690, Short.MAX_VALUE)
-        );
+        inventario.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        inventario.setText("INVENTARIO");
+        inventario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inventarioActionPerformed(evt);
+            }
+        });
 
-        jTabbedPane1.addTab("Gastos", gastos);
+        gastos.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        gastos.setText("GASTOS");
+        gastos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gastosActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout metricasLayout = new javax.swing.GroupLayout(metricas);
-        metricas.setLayout(metricasLayout);
-        metricasLayout.setHorizontalGroup(
-            metricasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1280, Short.MAX_VALUE)
-        );
-        metricasLayout.setVerticalGroup(
-            metricasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 690, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Métricas", metricas);
-
-        javax.swing.GroupLayout inventarioLayout = new javax.swing.GroupLayout(inventario);
-        inventario.setLayout(inventarioLayout);
-        inventarioLayout.setHorizontalGroup(
-            inventarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1280, Short.MAX_VALUE)
-        );
-        inventarioLayout.setVerticalGroup(
-            inventarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 690, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Inventario", inventario);
+        metricas.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        metricas.setText("METRICAS");
+        metricas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                metricasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addComponent(facturas, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(inventario, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(gastos, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(metricas, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(381, 381, 381)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(question, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(greeting, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(131, 131, 131)
+                .addComponent(greeting, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(question, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(facturas, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inventario, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gastos, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(metricas, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(361, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -123,23 +132,54 @@ public class MainView extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void facturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_facturasActionPerformed
+        // TODO add your handling code here:
+        Facturas facturas = new Facturas(user);
+            facturas.setVisible(true);
+            facturas.setLocationRelativeTo(null);
+    }//GEN-LAST:event_facturasActionPerformed
+
+    private void inventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inventarioActionPerformed
+        // TODO add your handling code here:
+        Inventario inventario = new Inventario(user);
+            inventario.setVisible(true);
+            inventario.setLocationRelativeTo(null);
+    }//GEN-LAST:event_inventarioActionPerformed
+
+    private void gastosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gastosActionPerformed
+        // TODO add your handling code here:
+        Gastos gastos = new Gastos(user);
+            gastos.setVisible(true);
+            gastos.setLocationRelativeTo(null);
+    }//GEN-LAST:event_gastosActionPerformed
+
+    private void metricasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_metricasActionPerformed
+        // TODO add your handling code here:
+        Metricas metricas = new Metricas(user);
+            metricas.setVisible(true);
+            metricas.setLocationRelativeTo(null);
+    }//GEN-LAST:event_metricasActionPerformed
+
     /**
      * @param args the command line arguments
      */
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel facturas;
-    private javax.swing.JPanel gastos;
+    private javax.swing.JButton facturas;
+    private javax.swing.JButton gastos;
     private javax.swing.JLabel greeting;
-    private javax.swing.JPanel inventario;
+    private javax.swing.JButton inventario;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JPanel metricas;
+    private javax.swing.JButton metricas;
+    private javax.swing.JLabel question;
     // End of variables declaration//GEN-END:variables
 }
