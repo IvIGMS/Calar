@@ -4,8 +4,13 @@
  */
 package com.calar.persistence;
 
+
+import com.calar.logic.Product;
 import com.calar.logic.User;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -99,6 +104,78 @@ public class ConnectionDB {
         } catch (SQLException ex) {
             System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
             return new User("none","none","none");
+        }
+    }
+    
+    public static Map<Integer, Object[]> getProducts(String email_){
+        
+        Map<Integer, Object[]> productos = new HashMap<Integer, Object[]>();
+        
+        try {
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            // Operaciones:
+            PreparedStatement statement = cn.prepareStatement("Select * from calar.producto where user_id IN ('admin@admin.com', '" + email_ + "');");
+            // Guardamos la query en resultado
+            ResultSet resultado = statement.executeQuery();
+            
+            
+            int contador = 0;
+            
+            while (resultado.next()) {
+                // Recuperamos el nombre y precio de cada producto
+                String nombre_producto = resultado.getString("nombre_producto");
+                int precio = resultado.getInt("precio");
+                
+                productos.put(contador, new Object[]{nombre_producto, precio});
+                contador ++;   
+            }
+            
+            resultado.close(); // Cerramos el resultSet
+            cn.close(); // Cerramos conexión.         
+
+            
+        } catch (SQLException ex) {
+            System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
+        }
+                 
+        return productos;
+    }
+    
+    public static void addProduct(Product product){
+        // Introducir un user previamente validado a la bbdd.
+        try {
+            System.out.println("Estamos en el try");
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            System.out.println("Se ha conectado correctamente");
+            
+            // Operaciones:
+            Statement stmt = cn.createStatement();
+            String sql = "insert into producto VALUES (\"" + product.getNombre() + "\", \""+ product.getPrecio() + "\", \""+ product.getUser_id() + "\");";
+            stmt.executeUpdate(sql);      
+            System.out.println("La query funciona.");
+            cn.close(); // Cerramos conexión.
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Has introducido un producto ya existente.");
+        }
+    }
+    
+    public static void dropProduct(String name, String email){
+        // Introducir un user previamente validado a la bbdd.
+        try {
+            System.out.println("Estamos en el try");
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            System.out.println("Se ha conectado correctamente");
+            
+            // Operaciones:
+            Statement stmt = cn.createStatement();
+            String sql = "DELETE FROM calar.producto WHERE nombre_producto = \"" + name + "\" AND user_id = \"" + email + "\";";
+            stmt.executeUpdate(sql);      
+            System.out.println("El producto se ha eliminado correctamente");
+            cn.close(); // Cerramos conexión.
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Has introducido un producto que no existe");
         }
     }
 }
