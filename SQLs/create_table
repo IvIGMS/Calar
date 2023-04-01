@@ -1,0 +1,29 @@
+
+-- USERS
+
+CREATE TABLE `user` (
+  `mail` varchar(250) NOT NULL,
+  `name` varchar(250) NOT NULL,
+  `surName` varchar(250) NOT NULL,
+  `password` varchar(250) NOT NULL,
+  PRIMARY KEY (`mail`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- PRODUCTO
+
+CREATE TABLE `producto` (
+  `nombre_producto` varchar(40) NOT NULL,
+  `precio` decimal(5,2) NOT NULL,
+  `user_id` varchar(100) NOT NULL,
+  PRIMARY KEY (`nombre_producto`,`user_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`mail`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- GREETING
+
+CREATE TABLE `greeting` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `text` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

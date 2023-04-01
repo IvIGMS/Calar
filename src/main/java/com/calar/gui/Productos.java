@@ -87,6 +87,8 @@ public class Productos extends JFrame {
             DropProduct drop = new DropProduct(user);
             drop.setVisible(true);
             drop.setLocationRelativeTo(null);
+            JOptionPane.showMessageDialog(null, "Los productos por defecto no pueden eliminarse.\n"
+                    + "Solo puedes eliminar los que has añadido.");
         });
         
         // Creación del botón "Actualizar" con imagen

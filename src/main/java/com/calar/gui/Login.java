@@ -6,6 +6,9 @@ package com.calar.gui;
 
 import com.calar.logic.Encrypt;
 import com.calar.persistence.ConnectionDB;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -178,7 +181,15 @@ public class Login extends javax.swing.JFrame {
             main.setLocationRelativeTo(null);
             this.dispose();
         } else {
-            System.out.println("Credenciales incorrectos.");
+        
+        // Carga la imagen "imagen.png" desde el directorio "imagenes" del proyecto
+        ImageIcon imagenOriginal = new ImageIcon("images/acceso.png");
+        Image imagenRedimensionada = imagenOriginal.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(imagenRedimensionada);
+
+        // Muestra el cuadro de diálogo con el icono personalizado
+        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos.\nInténtelo de nuevo.", "Login", JOptionPane.INFORMATION_MESSAGE, icon);
+        System.out.println("Credenciales incorrectos.");
         }
         
     }//GEN-LAST:event_btnLoginActionPerformed
