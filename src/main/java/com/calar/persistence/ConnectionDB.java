@@ -8,6 +8,7 @@ package com.calar.persistence;
 import com.calar.logic.Product;
 import com.calar.logic.User;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -176,6 +177,33 @@ public class ConnectionDB {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, "Has introducido un producto que no existe");
+        }
+    }
+    
+    public static ArrayList<String> getGreeting(){
+        
+        ArrayList<String> lista = new ArrayList<String>();
+        
+        try {
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            // Operaciones:
+            PreparedStatement statement = cn.prepareStatement("Select * from calar.greeting;");
+            // Guardamos la query en resultado
+            ResultSet resultado = statement.executeQuery();
+            
+            
+            while (resultado.next()) {
+                lista.add(resultado.getString("text")); 
+            }
+
+            resultado.close(); // Cerramos el resultSet
+            cn.close(); // Cerramos conexión.
+            
+            return lista;
+            
+        } catch (SQLException ex) {
+            System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
+            return lista;
         }
     }
 }

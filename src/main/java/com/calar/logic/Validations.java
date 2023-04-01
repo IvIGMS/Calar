@@ -29,7 +29,7 @@ public class Validations {
     
     public static boolean validateName(String name){
         System.out.println("Nombre validado");
-        return name.length() >= 2 && name.length() <=50;
+        return name.length() >= 2 && name.length() <=30;
     }
     
     public static boolean validatePassword(String password){

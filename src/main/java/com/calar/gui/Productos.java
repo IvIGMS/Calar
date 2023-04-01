@@ -42,7 +42,7 @@ public class Productos extends JFrame {
             prodPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             prodPanel.setPreferredSize(new Dimension(100, 70)); // Fijar el tamaño preferido del panel de la fruta
 
-            JLabel nombreLabel = new JLabel("Nombre: " + prod[0]);
+            JLabel nombreLabel = new JLabel("" + prod[0]);
             nombreLabel.setHorizontalAlignment(JLabel.CENTER);
             nombreLabel.setFont(font); // Fijar el tamaño de la fuente
             prodPanel.add(nombreLabel);
