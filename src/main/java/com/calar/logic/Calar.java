@@ -5,6 +5,7 @@
 package com.calar.logic;
 
 import com.calar.gui.Login;
+import com.calar.gui.Productos;
 
 /**
  *
@@ -18,8 +19,15 @@ public class Calar {
     public static void main(String[] args) {
         // TODO code application logic here
         // Vamos a llamar a nuestra pantalla de inicio, que en este caso es el login
+        
+        
         Login login = new Login();
         login.setVisible(true);
         login.setLocationRelativeTo(null);
+        /*
+        Productos productos = new Productos(new User("a","b","c"));
+        productos.setVisible(true);
+        productos.setLocationRelativeTo(null);
+        */
     }
 }
