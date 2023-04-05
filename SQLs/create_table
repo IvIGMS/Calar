@@ -27,3 +27,29 @@ CREATE TABLE `greeting` (
   `text` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- FACTURA
+
+create table factura (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    user_id VARCHAR(100) NOT NULL,
+    total_cost decimal (5,2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(mail)
+)engine=innodb;
+
+-- LINEA_FACTURA
+
+CREATE TABLE `linea_factura` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `factura_id` int NOT NULL,
+  `nombre_producto` varchar(100) NOT NULL,
+  `email_producto` varchar(100) NOT NULL,
+  `cantidad` int NOT NULL,
+  `total_cost` decimal(5,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `factura_id` (`factura_id`),
+  KEY `nombre_producto` (`nombre_producto`,`email_producto`),
+  CONSTRAINT `linea_factura_ibfk_1` FOREIGN KEY (`factura_id`) REFERENCES `factura` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `linea_factura_ibfk_2` FOREIGN KEY (`nombre_producto`, `email_producto`) REFERENCES `producto` (`nombre_producto`, `user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
