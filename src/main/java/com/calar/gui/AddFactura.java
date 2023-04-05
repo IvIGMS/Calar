@@ -4,6 +4,7 @@
  */
 package com.calar.gui;
 
+import com.calar.logic.LineaFactura;
 import com.calar.logic.Product;
 import com.calar.logic.User;
 import com.calar.logic.Validations;
@@ -15,17 +16,23 @@ import javax.swing.JOptionPane;
  *
  * @author ivanfriasgil
  */
-public class AddProduct extends javax.swing.JFrame {
+public class AddFactura extends javax.swing.JFrame {
     
     private User user;
     private Product product;
+    private int id_factura;
+    private float precio_acumulado = 0;
+    
     /**
      * Creates new form AddProduct
      */
-    public AddProduct(User user) {
+    public AddFactura(User user, int id_factura) {
         this.user = user;
+        this.id_factura = id_factura;
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        
     }
 
     /**
@@ -39,25 +46,28 @@ public class AddProduct extends javax.swing.JFrame {
 
         panel = new javax.swing.JPanel();
         nombre = new javax.swing.JLabel();
-        nombreField = new javax.swing.JTextField();
+        nombreProductoField = new javax.swing.JTextField();
         precio = new javax.swing.JLabel();
-        precioField = new javax.swing.JTextField();
+        cantidadProductoField = new javax.swing.JTextField();
         add = new javax.swing.JButton();
         salir = new javax.swing.JButton();
+        showProducts = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         nombre.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        nombre.setText("Nombre");
+        nombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nombre.setText("Nombre producto");
 
-        nombreField.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        nombreField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        nombreProductoField.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        nombreProductoField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         precio.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        precio.setText("Precio");
+        precio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        precio.setText("Cantidad");
 
-        precioField.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        precioField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        cantidadProductoField.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        cantidadProductoField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         add.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         add.setText("Añadir");
@@ -75,26 +85,30 @@ public class AddProduct extends javax.swing.JFrame {
             }
         });
 
+        showProducts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showProductsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
                 .addContainerGap(65, Short.MAX_VALUE)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(precioField, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelLayout.createSequentialGroup()
-                        .addGap(125, 125, 125)
-                        .addComponent(precio, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelLayout.createSequentialGroup()
-                        .addGap(119, 119, 119)
-                        .addComponent(nombre))
-                    .addGroup(panelLayout.createSequentialGroup()
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(precio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nombreProductoField, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                    .addComponent(add, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                    .addComponent(cantidadProductoField, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelLayout.createSequentialGroup()
                         .addGap(84, 84, 84)
                         .addComponent(salir, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(71, 71, 71))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(showProducts, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -102,11 +116,13 @@ public class AddProduct extends javax.swing.JFrame {
                 .addGap(57, 57, 57)
                 .addComponent(nombre)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(showProducts, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nombreProductoField, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(precio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(precioField, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cantidadProductoField, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(add, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -133,27 +149,55 @@ public class AddProduct extends javax.swing.JFrame {
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        // PROGRAMAR FUNCIONALIDAD PARA DECIDIR SI GUARDAR O NO LA FACTURA
+        Object[] opciones = {"Sí", "No", "Cancelar"};
+        int opcion = JOptionPane.showOptionDialog(null, "¿Quiere guardar la factura?", "Factura", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
+        if (opcion == JOptionPane.YES_OPTION) {
+            // Actualizamos precio final de la factura.
+            System.out.println("Factura guardada");
+            int id_factura = ConnectionDB.getIdLastFacture();
+            ConnectionDB.updatePrecioFactura(precio_acumulado, id_factura);
+            
+            this.dispose();
+        } else if (opcion == JOptionPane.NO_OPTION) {
+            // Eliminar la factura que acabamos de crear
+            ConnectionDB.dropLastFacture();
+            System.out.println("Ha salido de dropFacture");
+            this.dispose();
+        } else {
+            System.out.println("El usuario seleccionó Cancelar.");
+        }
     }//GEN-LAST:event_salirActionPerformed
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
         // TODO add your handling code here:
-        String nombreProducto = nombreField.getText();
-        String precioProducto = precioField.getText();
-        String user_idProducto = user.getEmail();
-     
-        // Validamos nombre y precio
-        if (Validations.validateName(nombreProducto) && Validations.validatePrice(precioProducto) ){
-            float precioProductoFloat = Float.parseFloat(precioProducto);
-            
-            product = new Product(nombreProducto, precioProductoFloat, user_idProducto);
-            ConnectionDB.addProduct(product);
-            
-            JOptionPane.showMessageDialog(null, "Producto introducido correctamente.");             
-        } else {
-            JOptionPane.showMessageDialog(null, "Error al introducir los datos.");
-        }  
+        // Creamos la logica para añadir una linea_factura.
+        String nombreProducto = nombreProductoField.getText();
+        int cantidadProducto = Integer.parseInt(cantidadProductoField.getText());
+        System.out.println("Cantidad producto" + cantidadProducto);
+        // Traemos el precio del producto.
+        float precioProducto = ConnectionDB.getPriceProduct(nombreProducto, user.getEmail());
+        System.out.println("Precio producto" + precioProducto);
+       
+        // Calculamos el total multiplicando el precio x cantidad
+        float precioTotal = cantidadProducto * precioProducto;
+        System.out.println("Cantidad producto" + precioTotal);
+        
+        // Aqui va un if
+        precio_acumulado += precioTotal;
+        System.out.println(precio_acumulado);
+        
+        LineaFactura lin = new LineaFactura(id_factura, nombreProducto, cantidadProducto, precioTotal);
+        // Insertamos la linea de factura en la bbdd.
+        ConnectionDB.insertarLineaFactura(lin, user.getEmail());
     }//GEN-LAST:event_addActionPerformed
+
+    private void showProductsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showProductsActionPerformed
+        // TODO add your handling code here:
+        ShowProducts prod = new ShowProducts(user, this);
+            prod.setVisible(true);
+            prod.setLocationRelativeTo(null);
+    }//GEN-LAST:event_showProductsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -161,11 +205,12 @@ public class AddProduct extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add;
+    private javax.swing.JTextField cantidadProductoField;
     private javax.swing.JLabel nombre;
-    private javax.swing.JTextField nombreField;
+    private javax.swing.JTextField nombreProductoField;
     private javax.swing.JPanel panel;
     private javax.swing.JLabel precio;
-    private javax.swing.JTextField precioField;
     private javax.swing.JButton salir;
+    private javax.swing.JButton showProducts;
     // End of variables declaration//GEN-END:variables
 }

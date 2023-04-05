@@ -8,6 +8,9 @@ import com.calar.logic.Product;
 import com.calar.logic.User;
 import com.calar.logic.Validations;
 import com.calar.persistence.ConnectionDB;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -24,6 +27,7 @@ public class DropProduct extends javax.swing.JFrame {
     public DropProduct(User user) {
         this.user = user;
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -128,8 +132,10 @@ public class DropProduct extends javax.swing.JFrame {
         if (Validations.validateName(nombreProducto) ){
             
             ConnectionDB.dropProduct(nombreProducto, user_idProducto);
-            
-            JOptionPane.showMessageDialog(null, "El producto " + nombreProducto +" se ha elimnado correctamente");             
+            ImageIcon imagenOriginal = new ImageIcon("images/delete.png");
+            Image imagenRedimensionada = imagenOriginal.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(imagenRedimensionada);
+            JOptionPane.showMessageDialog(null, "El producto \"" + nombreProducto +"\" se ha elimnado correctamente", "Eliminar producto", JOptionPane.INFORMATION_MESSAGE, icon);            
         } else {
             JOptionPane.showMessageDialog(null, "Error al introducir los datos.");
         }  

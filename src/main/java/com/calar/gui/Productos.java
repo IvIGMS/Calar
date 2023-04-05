@@ -19,8 +19,8 @@ public class Productos extends JFrame {
     public Productos(User user) {
         this.user = user;
         // Configuración del JFrame
-        setTitle("Lista de frutas");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Productos");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1280, 720);
         setResizable(false);
         
@@ -87,8 +87,11 @@ public class Productos extends JFrame {
             DropProduct drop = new DropProduct(user);
             drop.setVisible(true);
             drop.setLocationRelativeTo(null);
-            JOptionPane.showMessageDialog(null, "Los productos por defecto no pueden eliminarse.\n"
-                    + "Solo puedes eliminar los que has añadido.");
+            ImageIcon imagenOriginal = new ImageIcon("images/peligro.png");
+            Image imagenRedimensionada = imagenOriginal.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(imagenRedimensionada);
+            JOptionPane.showMessageDialog(null, "Los productos por defecto no pueden eliminarse.\nSolo puedes eliminar los que has añadido.", "Eliminar producto", JOptionPane.INFORMATION_MESSAGE, icon);
+
         });
         
         // Creación del botón "Actualizar" con imagen
