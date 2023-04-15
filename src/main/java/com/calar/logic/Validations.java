@@ -65,5 +65,25 @@ public class Validations {
             return false; // devuelve false si el String no es un número válido
         }
     }
+    
+    public static boolean validateSendPrice(String strNumero) {
+        System.out.println("Precio del producto a añadir validado");
+        try {
+            float numero = Float.parseFloat(strNumero); // convierte el String a int
+            return numero < 10000; // devuelve true si el número es menor que 10.000, false en caso contrario
+        } catch (NumberFormatException e) {
+            return false; // devuelve false si el String no es un número válido
+        }
+    }
+    
+    public static boolean validateNum(String strNumero) {
+        System.out.println("Precio del producto a añadir validado");
+        try {
+            int numero = Integer.parseInt(strNumero); // convierte el String a int
+            return numero > 0; // devuelve true si el número es mayor que 0, false en caso contrario
+        } catch (NumberFormatException e) {
+            return false; // devuelve false si el String no es un número válido
+        }
+    }
 
 }

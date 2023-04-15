@@ -53,3 +53,15 @@ CREATE TABLE `linea_factura` (
   CONSTRAINT `linea_factura_ibfk_2` FOREIGN KEY (`nombre_producto`, `email_producto`) REFERENCES `producto` (`nombre_producto`, `user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- GASTO
+
+CREATE TABLE `gasto` (
+  `id` int AUTO_INCREMENT,
+  `user_id` varchar(100) NOT NULL,
+  `cantidad` int NOT NULL,
+  `coste` decimal(7,2) NOT NULL,
+  `concepto` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`,`user_id`),
+  KEY `id` (`user_id`),
+  CONSTRAINT `gasto_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`mail`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
