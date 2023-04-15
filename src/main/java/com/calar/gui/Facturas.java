@@ -54,6 +54,13 @@ public class Facturas extends JFrame {
             id_.setFont(font); // Fijar el tamaño de la fuente
             prodPanel.add(id_);
             
+                // FECHA
+            String dateText = ConnectionDB.getDateFactura(Integer.parseInt(id_factura));
+            JLabel date_ = new JLabel(dateText);
+            date_.setHorizontalAlignment(JLabel.CENTER);
+            date_.setFont(font2); // Fijar el tamaño de la fuente
+            prodPanel.add(date_);
+            
             int contador = 0;
             
             // ########################
@@ -71,6 +78,8 @@ public class Facturas extends JFrame {
                     valor_linea.setFont(font2); // Fijar el tamaño de la fuente
                     prodPanel.add(valor_linea);
                     contador ++;
+                    
+                    
                 }
  
             }
@@ -83,6 +92,7 @@ public class Facturas extends JFrame {
             precio_total_.setHorizontalAlignment(JLabel.CENTER);
             precio_total_.setFont(font); // Fijar el tamaño de la fuente
             prodPanel.add(precio_total_);
+            
 
             panel.add(prodPanel);
         }
@@ -123,9 +133,9 @@ public class Facturas extends JFrame {
         dropButton.setFont(new java.awt.Font("Helvetica Neue", 0, 24));
         dropButton.addActionListener(e -> {
             // Código para eliminar un producto
-            DropProduct drop = new DropProduct(user);
-            drop.setVisible(true);
-            drop.setLocationRelativeTo(null);
+            DropFactura dft = new DropFactura(user);
+            dft.setVisible(true);
+            dft.setLocationRelativeTo(null);
         });
         
         // Creación del botón "Actualizar" con imagen

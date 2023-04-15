@@ -9,6 +9,7 @@ import com.calar.logic.LineaFactura;
 import com.calar.logic.Product;
 import com.calar.logic.User;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -127,8 +128,9 @@ public class ConnectionDB {
                 // Recuperamos el nombre y precio de cada producto
                 String nombre_producto = resultado.getString("nombre_producto");
                 float precio = resultado.getFloat("precio");
+                int existencias = resultado.getInt("existencias");
                 
-                productos.put(contador, new Object[]{nombre_producto, precio});
+                productos.put(contador, new Object[]{nombre_producto, precio, existencias});
                 contador ++;   
             }
             
@@ -347,10 +349,7 @@ public class ConnectionDB {
             PreparedStatement statement = cn.prepareStatement("Select nombre_producto from calar.producto where user_id = \"" + email_ + "\";");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
-            
-            
-            
-            
+
             while (resultado.next()) {
                 // Recuperamos el nombre y precio de cada producto
                 String nombre_producto = resultado.getString("nombre_producto");
@@ -360,7 +359,6 @@ public class ConnectionDB {
             resultado.close(); // Cerramos el resultSet
             cn.close(); // Cerramos conexión.         
 
-            
         } catch (SQLException ex) {
             System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
         }
@@ -388,6 +386,58 @@ public class ConnectionDB {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, "Error al actualiar el coste de la factura.");
         }  
+    }
+    
+    public static boolean dropFactura(int idFactura, User user){
+        int id = -1;
+        
+        // Introducir un user previamente validado a la bbdd.
+        try {
+            
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            System.out.println("Se ha conectado correctamente.");
+            
+            // Recuperamos el id de la factura
+            String sql = "SELECT id from factura where id = " + idFactura + " and user_id = \"" + user.getEmail() + "\";";
+            PreparedStatement statement = cn.prepareStatement(sql);
+            // Guardamos la query en resultado
+            ResultSet resultado = statement.executeQuery();
+            // Tratamos el resultado
+
+            while (resultado.next()) {
+                id = resultado.getInt("id"); 
+            }
+            
+            cn.close();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al eliminar factura.");
+            return false;
+
+        }
+        
+        if (id < 0){
+            return false;
+        } else {
+            try {
+            
+            Connection cn2 = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+
+            // Operaciones:
+            Statement stmt2 = cn2.createStatement();
+            String sql = "delete from factura where id = " + id + "";
+            stmt2.executeUpdate(sql);
+            System.out.println("Factura eliminada");
+            cn2.close(); // Cerramos conexión.
+         
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al eliminar la factura.");
+            }
+            
+            return true;
+        }
     }
     
     public static int getIdLastFacture(){
@@ -434,8 +484,7 @@ public class ConnectionDB {
             while (resultado.next()) {
                 // Recuperamos el nombre y precio de cada producto
                 int id = resultado.getInt("id");
-                float total_cost = resultado.getFloat("total_cost");
-                
+                float total_cost = resultado.getFloat("total_cost"); 
                 productos.put(id, total_cost);
   
             }
@@ -451,6 +500,32 @@ public class ConnectionDB {
         return productos;
     }
     
+    public static String getDateFactura(int id_){
+        String fechaString = "none";
+        try {
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            // Operaciones:
+            PreparedStatement statement = cn.prepareStatement("Select date from calar.factura where id = \"" + id_ + "\";");
+            // Guardamos la query en resultado
+            ResultSet resultado = statement.executeQuery();
+            
+            while (resultado.next()) {
+                // Recuperamos la fecha que queremos
+                Timestamp fecha = resultado.getTimestamp("date"); // Utilizamos getTimestamp() para obtener la fecha y hora
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); // Definimos el patrón de formato deseado
+                fechaString = formatter.format(fecha); 
+            }
+            
+            resultado.close(); // Cerramos el resultSet
+            cn.close(); // Cerramos conexión.
+            
+        } catch (SQLException ex) {
+            System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
+        }
+                 
+        return fechaString;
+    }
+    
     public static Map<Integer, String[]> getLineasFactura(String email_){
         
         Map<Integer, String[]> lineas = new HashMap<Integer, String[]>();
@@ -461,7 +536,6 @@ public class ConnectionDB {
             PreparedStatement statement = cn.prepareStatement("Select factura_id, nombre_producto, cantidad, total_cost from calar.linea_factura where email_producto = \"" + email_ + "\";");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
-            
             
             int contador = 0;
             
@@ -488,4 +562,56 @@ public class ConnectionDB {
         return lineas;
     }
     
+    public static void addGasto(String user_id, int cantidad, float coste, String concepto){
+        // Introducir un user previamente validado a la bbdd.
+        try {
+            System.out.println("Estamos en el try");
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            System.out.println("Se ha conectado correctamente");
+            
+            // Operaciones:
+            Statement stmt = cn.createStatement();
+            String sql = "insert into gasto (user_id, cantidad, coste, concepto) VALUES (\"" + user_id + "\", \""+ cantidad + "\", \""+ coste + "\", \""+ concepto + "\");";
+            stmt.executeUpdate(sql);      
+            cn.close(); // Cerramos conexión.
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Fallo");
+        }
+    }
+    
+    public static void updateProductExistencias(String email_, String nombreProducto, int cantidad){
+            try {
+            
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+
+            // Operaciones:
+            Statement stmt = cn.createStatement();
+            String sql = "UPDATE producto SET existencias = existencias + " + cantidad + " WHERE nombre_producto = \"" + nombreProducto + "\" and user_id = \"" + email_ + "\";";
+            System.out.println(sql);
+            stmt.executeUpdate(sql);      
+            System.out.println("Existencias del producto actualizadas");
+            
+            cn.close(); // Cerramos conexión.
+         
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al actualiar las existencias del producto");
+            } 
+    }
+    
+    public static boolean checkProductExists(String nombreProducto, String email) {
+        try {
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Statement stmt = cn.createStatement();
+            String sql = "SELECT * FROM calar.producto WHERE nombre_producto = \"" + nombreProducto + "\" and user_id = \"" + email + "\";";
+            ResultSet rs = stmt.executeQuery(sql);
+            boolean exists = rs.next(); // Comprobamos si hay alguna fila en el ResultSet
+            cn.close(); // Cerramos la conexión
+            return exists;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false; // En caso de error, devolvemos false
+        }
+    }
 }
