@@ -174,22 +174,28 @@ public class AddFactura extends javax.swing.JFrame {
         // Creamos la logica para añadir una linea_factura.
         String nombreProducto = nombreProductoField.getText();
         int cantidadProducto = Integer.parseInt(cantidadProductoField.getText());
-        System.out.println("Cantidad producto" + cantidadProducto);
-        // Traemos el precio del producto.
-        float precioProducto = ConnectionDB.getPriceProduct(nombreProducto, user.getEmail());
-        System.out.println("Precio producto" + precioProducto);
-       
-        // Calculamos el total multiplicando el precio x cantidad
-        float precioTotal = cantidadProducto * precioProducto;
-        System.out.println("Cantidad producto" + precioTotal);
         
-        // Aqui va un if
-        precio_acumulado += precioTotal;
-        System.out.println(precio_acumulado);
+        if (cantidadProducto > 0){
+            System.out.println("Cantidad producto" + cantidadProducto);
+            // Traemos el precio del producto.
+            float precioProducto = ConnectionDB.getPriceProduct(nombreProducto, user.getEmail());
+            System.out.println("Precio producto" + precioProducto);
+
+            // Calculamos el total multiplicando el precio x cantidad
+            float precioTotal = cantidadProducto * precioProducto;
+            System.out.println("Cantidad producto" + precioTotal);
+
+            // Aqui va un if
+            precio_acumulado += precioTotal;
+            System.out.println(precio_acumulado);
+
+            LineaFactura lin = new LineaFactura(id_factura, nombreProducto, cantidadProducto, precioTotal);
+            // Insertamos la linea de factura en la bbdd.
+            ConnectionDB.insertarLineaFactura(lin, user.getEmail());
+        } else {
+            JOptionPane.showMessageDialog(null, "La cantidad tiene que ser mayor que 0");
+        }
         
-        LineaFactura lin = new LineaFactura(id_factura, nombreProducto, cantidadProducto, precioTotal);
-        // Insertamos la linea de factura en la bbdd.
-        ConnectionDB.insertarLineaFactura(lin, user.getEmail());
     }//GEN-LAST:event_addActionPerformed
 
     private void showProductsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showProductsActionPerformed

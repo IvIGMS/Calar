@@ -477,7 +477,7 @@ public class ConnectionDB {
         try {
             Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select id, total_cost from calar.factura where user_id = \"" + email_ + "\";");
+            PreparedStatement statement = cn.prepareStatement("Select id, total_cost from calar.factura where user_id = \"" + email_ + "\" order by date asc;");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -614,4 +614,90 @@ public class ConnectionDB {
             return false; // En caso de error, devolvemos false
         }
     }
+    
+    public static Map<Integer, String[]> getGastos(String email_){
+        
+        Map<Integer, String[]> productos = new HashMap<Integer, String[]>();
+        
+        try {
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            // Operaciones:
+            PreparedStatement statement = cn.prepareStatement("Select id, cantidad, coste, concepto, date from calar.gasto where user_id = \"" + email_ + "\";");
+            // Guardamos la query en resultado
+            ResultSet resultado = statement.executeQuery();
+            
+            
+            int contador = 0;
+            
+            while (resultado.next()) {
+                // Recuperamos el id y los campos de la tabla gasto.
+                int id = resultado.getInt("id");
+                int cantidad = resultado.getInt("cantidad");
+                float coste = resultado.getFloat("coste");
+                String concepto = resultado.getString("concepto");
+                
+                Timestamp timestamp = resultado.getTimestamp("date");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                String dateString = sdf.format(timestamp);
+                
+                String idStr = String.valueOf(id);
+                String cantidadStr = String.valueOf(cantidad);
+                String costeStr = String.valueOf(coste);
+                
+                productos.put(contador, new String[]{idStr, cantidadStr, costeStr, concepto, dateString});
+                contador ++;   
+            }
+            
+            resultado.close(); // Cerramos el resultSet
+            cn.close(); // Cerramos conexión.         
+
+            
+        } catch (SQLException ex) {
+            System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
+        }
+                 
+        return productos;
+    }
+    
+    public static float calcBalance(String email_){
+        float ingresoTotal = 0;
+        float gastoTotal = 0;
+        
+        try {
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            // Operaciones:
+            PreparedStatement statement = cn.prepareStatement("select sum(total_cost) AS total from factura where user_id = \"" + email_ + "\";");
+            // Guardamos la query en resultado
+            ResultSet resultado = statement.executeQuery();
+            
+            while (resultado.next()) {
+                // Recuperamos el id y los campos de la tabla gasto.
+                ingresoTotal = resultado.getFloat("total");
+            }
+            
+            resultado.close(); // Cerramos el resultSet
+            cn.close(); // Cerramos conexión.
+            
+            Connection cn1 = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            // Operaciones:
+            PreparedStatement statement1 = cn1.prepareStatement("select sum(coste) AS total from gasto where user_id = \"" + email_ + "\";");
+            // Guardamos la query en resultado
+            ResultSet resultado1 = statement1.executeQuery();
+            
+            while (resultado1.next()) {
+                // Recuperamos el id y los campos de la tabla gasto.
+                gastoTotal = resultado1.getFloat("total");
+            }
+            
+            resultado1.close(); // Cerramos el resultSet
+            cn.close(); // Cerramos conexión.  
+
+            
+        } catch (SQLException ex) {
+            System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
+        }
+                 
+        return ingresoTotal - gastoTotal;
+    }
 }
+
