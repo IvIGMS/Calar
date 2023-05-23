@@ -479,22 +479,24 @@ public class ConnectionDB {
         }  
     }
     
-    public static Map<Integer, Float> getFacturas(String email_){
+    public static Map<Integer, Object[]> getFacturas(String email_){
         
-        Map<Integer, Float> productos = new HashMap<Integer, Float>();
+        Map<Integer, Object[]> productos = new HashMap<Integer, Object[]>();
         
         try {
             Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select id, total_cost from factura where user_id = \"" + email_ + "\" order by date asc;");
+            PreparedStatement statement = cn.prepareStatement("Select id, total_cost, date from factura where user_id = \"" + email_ + "\" order by id asc;");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
             while (resultado.next()) {
                 // Recuperamos el nombre y precio de cada producto
                 int id = resultado.getInt("id");
-                float total_cost = resultado.getFloat("total_cost"); 
-                productos.put(id, total_cost);
+                float total_cost = resultado.getFloat("total_cost");
+                String date = resultado.getString("date");
+                Object[] datosProducto = {total_cost, date};
+                productos.put(id, datosProducto);
   
             }
             
@@ -542,7 +544,7 @@ public class ConnectionDB {
         try {
             Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select factura_id, nombre_producto, cantidad, total_cost from calar.linea_factura where email_producto = \"" + email_ + "\";");
+            PreparedStatement statement = cn.prepareStatement("Select factura_id, nombre_producto, cantidad, total_cost from linea_factura where email_producto = \"" + email_ + "\";");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
