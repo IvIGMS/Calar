@@ -89,8 +89,6 @@ public class Productos extends JFrame {
             drop.setLocationRelativeTo(null);
             ImageIcon imagenOriginal = new ImageIcon("images/peligro.png");
             Image imagenRedimensionada = imagenOriginal.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(imagenRedimensionada);
-            JOptionPane.showMessageDialog(null, "Los productos por defecto no pueden eliminarse.\nSolo puedes eliminar los que has añadido.", "Eliminar producto", JOptionPane.INFORMATION_MESSAGE, icon);
 
         });
         

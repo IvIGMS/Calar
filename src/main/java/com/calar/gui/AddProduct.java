@@ -147,9 +147,13 @@ public class AddProduct extends javax.swing.JFrame {
             float precioProductoFloat = Float.parseFloat(precioProducto);
             
             product = new Product(nombreProducto, precioProductoFloat, user_idProducto);
-            ConnectionDB.addProduct(product);
+            boolean activador = ConnectionDB.addProduct(product);
             
-            JOptionPane.showMessageDialog(null, "Producto introducido correctamente.");             
+            // Solo mostrar el texto si hemos introducido algo en la bbdd
+            if(activador){
+                JOptionPane.showMessageDialog(null, "Producto introducido correctamente.");   
+            }
+          
         } else {
             JOptionPane.showMessageDialog(null, "Error al introducir los datos.");
         }  

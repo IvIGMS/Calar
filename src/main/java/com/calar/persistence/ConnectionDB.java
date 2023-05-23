@@ -20,13 +20,18 @@ import javax.swing.JOptionPane;
  * @author ivanfriasgil
  */
 public class ConnectionDB {
+    /*
     private static final String URL_DB = "jdbc:mysql://localhost/calar?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private static final String USUARIO_DB = "ivan@frias";
     private static final String PASSWORD_DB = "$tcabberR1";
+    */
+    private static final String dbPath = System.getProperty("user.home") + "/calar.db";
+    private static final String dbParameters = "jdbc:sqlite:" + dbPath;
+
     
     public static void testConnection() {
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente");
             
             // Operaciones:
@@ -40,7 +45,7 @@ public class ConnectionDB {
     public static void createUser(User user){
         // Introducir un user previamente validado a la bbdd.
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente");
             
             // Operaciones:
@@ -58,9 +63,9 @@ public class ConnectionDB {
     
     public static boolean login(String email_, String password_){
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select * from calar.user where mail = '" + email_ + "'");
+            PreparedStatement statement = cn.prepareStatement("Select * from user where mail = '" + email_ + "'");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -84,9 +89,9 @@ public class ConnectionDB {
     
     public static User getUser(String email_){
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select * from calar.user where mail = '" + email_ + "'");
+            PreparedStatement statement = cn.prepareStatement("Select * from user where mail = '" + email_ + "'");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -115,9 +120,9 @@ public class ConnectionDB {
         Map<Integer, Object[]> productos = new HashMap<Integer, Object[]>();
         
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select * from calar.producto where user_id = \"" + email_ + "\";");
+            PreparedStatement statement = cn.prepareStatement("Select * from producto where user_id = \"" + email_ + "\" order by nombre_producto asc;");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -145,35 +150,39 @@ public class ConnectionDB {
         return productos;
     }
     
-    public static void addProduct(Product product){
+    public static boolean addProduct(Product product){
         // Introducir un user previamente validado a la bbdd.
+        boolean retorno = true;
         try {
             System.out.println("Estamos en el try");
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente");
             
             // Operaciones:
             Statement stmt = cn.createStatement();
-            String sql = "insert into calar.producto VALUES (\"" + product.getNombre() + "\", \""+ product.getPrecio() + "\", \""+ product.getUser_id() + "\");";
+            String sql = "insert into producto VALUES (\"" + product.getNombre() + "\", \""+ product.getPrecio() + "\", 0, \""+ product.getUser_id() + "\");";
             stmt.executeUpdate(sql);      
             System.out.println("La query funciona.");
             cn.close(); // Cerramos conexión.
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, "Has introducido un producto ya existente.");
+            retorno = false;
         }
+        
+        return retorno;
     }
     
     public static void dropProduct(String name, String email){
         // Introducir un user previamente validado a la bbdd.
         try {
             System.out.println("Estamos en el try");
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente");
             
             // Operaciones:
             Statement stmt = cn.createStatement();
-            String sql = "DELETE FROM calar.producto WHERE nombre_producto = \"" + name + "\" AND user_id = \"" + email + "\";";
+            String sql = "DELETE FROM producto WHERE nombre_producto = \"" + name + "\" AND user_id = \"" + email + "\";";
             stmt.executeUpdate(sql);      
             System.out.println("El producto se ha eliminado correctamente");
             cn.close(); // Cerramos conexión.
@@ -188,9 +197,9 @@ public class ConnectionDB {
         ArrayList<String> lista = new ArrayList<String>();
         
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select * from calar.greeting;");
+            PreparedStatement statement = cn.prepareStatement("Select * from greeting;");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -216,23 +225,23 @@ public class ConnectionDB {
         // Introducir un user previamente validado a la bbdd.
         try {
             System.out.println("Estamos en el try");
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente");
             
             // Operaciones:
             Statement stmt = cn.createStatement();
-            String sql = "insert into calar.factura (user_id, total_cost) VALUES (\"" + user.getEmail() + "\",0.0);";
+            String sql = "insert into factura (user_id, total_cost) VALUES (\"" + user.getEmail() + "\",0.0);";
             stmt.executeUpdate(sql);      
             System.out.println("Nueva factura añadida.");
                     
             cn.close(); // Cerramos conexión.
             
             System.out.println("Estamos en el segundo try");
-            cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente a la segunda");
             
             // Recuperamos el id de la factura
-            sql = "SELECT * FROM calar.factura ORDER BY id DESC LIMIT 1;";
+            sql = "SELECT * FROM factura ORDER BY id DESC LIMIT 1;";
             PreparedStatement statement = cn.prepareStatement(sql);
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
@@ -259,11 +268,11 @@ public class ConnectionDB {
         // Introducir un user previamente validado a la bbdd.
         try {
             
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente.");
             
             // Recuperamos el id de la factura
-            String sql = "SELECT * FROM calar.factura ORDER BY id DESC LIMIT 1;";
+            String sql = "SELECT * FROM factura ORDER BY id DESC LIMIT 1;";
             PreparedStatement statement = cn.prepareStatement(sql);
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
@@ -276,12 +285,12 @@ public class ConnectionDB {
             
             cn.close();
             
-            cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente.");
             
             // Operaciones:
             Statement stmt = cn.createStatement();
-            sql = "delete from calar.factura where id = " + id +";";
+            sql = "delete from factura where id = " + id +";";
             stmt.executeUpdate(sql);      
             System.out.println("La factura se ha eliminado correctamente.");
             cn.close(); // Cerramos conexión.
@@ -294,9 +303,9 @@ public class ConnectionDB {
     
     public static float getPriceProduct(String nombreProducto, String email){
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select precio from calar.producto where nombre_producto = \"" + nombreProducto + "\" and user_id = \"" + email + "\";");
+            PreparedStatement statement = cn.prepareStatement("Select precio from producto where nombre_producto = \"" + nombreProducto + "\" and user_id = \"" + email + "\";");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -321,12 +330,12 @@ public class ConnectionDB {
         // Introducir un user previamente validado a la bbdd.
         try {
             System.out.println("Comienza linea factura");
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente");
             
             // Operaciones:
             Statement stmt = cn.createStatement();
-            String sql = "insert into calar.linea_factura (factura_id, nombre_producto, email_producto, cantidad, total_cost) VALUES (" + lin.getId_factura() + ", \"" + lin.getN_producto() + "\", \"" + email + "\", " + lin.getCantidad() + ", " + lin.getPrecioTotal() + ");";
+            String sql = "insert into linea_factura (factura_id, nombre_producto, email_producto, cantidad, total_cost) VALUES (" + lin.getId_factura() + ", \"" + lin.getN_producto() + "\", \"" + email + "\", " + lin.getCantidad() + ", " + lin.getPrecioTotal() + ");";
             System.out.println(sql);
             stmt.executeUpdate(sql);      
             System.out.println("Nueva linea de factura añadida.");
@@ -344,9 +353,9 @@ public class ConnectionDB {
         ArrayList<String> products = new ArrayList<String>();
         
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select nombre_producto from calar.producto where user_id = \"" + email_ + "\";");
+            PreparedStatement statement = cn.prepareStatement("Select nombre_producto from producto where user_id = \"" + email_ + "\";");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
 
@@ -370,12 +379,12 @@ public class ConnectionDB {
         // Introducir un user previamente validado a la bbdd.
         try {
             
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             
             
             // Operaciones:
             Statement stmt = cn.createStatement();
-            String sql = "update calar.factura set total_cost = " + costo_total + " where id = " + id + "";
+            String sql = "update factura set total_cost = " + costo_total + " where id = " + id + "";
             System.out.println(sql);
             stmt.executeUpdate(sql);      
             System.out.println("Precio total factura actualizado");
@@ -394,7 +403,7 @@ public class ConnectionDB {
         // Introducir un user previamente validado a la bbdd.
         try {
             
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente.");
             
             // Recuperamos el id de la factura
@@ -422,7 +431,7 @@ public class ConnectionDB {
         } else {
             try {
             
-            Connection cn2 = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn2 = DriverManager.getConnection(dbParameters);
 
             // Operaciones:
             Statement stmt2 = cn2.createStatement();
@@ -444,11 +453,11 @@ public class ConnectionDB {
         // Introducir un user previamente validado a la bbdd.
         try {
             
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente.");
             
             // Recuperamos el id de la factura
-            String sql = "SELECT id FROM calar.factura ORDER BY id DESC LIMIT 1;";
+            String sql = "SELECT id FROM factura ORDER BY id DESC LIMIT 1;";
             PreparedStatement statement = cn.prepareStatement(sql);
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
@@ -475,9 +484,9 @@ public class ConnectionDB {
         Map<Integer, Float> productos = new HashMap<Integer, Float>();
         
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select id, total_cost from calar.factura where user_id = \"" + email_ + "\" order by date asc;");
+            PreparedStatement statement = cn.prepareStatement("Select id, total_cost from factura where user_id = \"" + email_ + "\" order by date asc;");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -503,9 +512,9 @@ public class ConnectionDB {
     public static String getDateFactura(int id_){
         String fechaString = "none";
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select date from calar.factura where id = \"" + id_ + "\";");
+            PreparedStatement statement = cn.prepareStatement("Select date from factura where id = \"" + id_ + "\";");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -531,7 +540,7 @@ public class ConnectionDB {
         Map<Integer, String[]> lineas = new HashMap<Integer, String[]>();
         
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
             PreparedStatement statement = cn.prepareStatement("Select factura_id, nombre_producto, cantidad, total_cost from calar.linea_factura where email_producto = \"" + email_ + "\";");
             // Guardamos la query en resultado
@@ -566,7 +575,7 @@ public class ConnectionDB {
         // Introducir un user previamente validado a la bbdd.
         try {
             System.out.println("Estamos en el try");
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente");
             
             // Operaciones:
@@ -583,7 +592,7 @@ public class ConnectionDB {
     public static void updateProductExistencias(String email_, String nombreProducto, int cantidad){
             try {
             
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
 
             // Operaciones:
             Statement stmt = cn.createStatement();
@@ -602,9 +611,9 @@ public class ConnectionDB {
     
     public static boolean checkProductExists(String nombreProducto, String email) {
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            Connection cn = DriverManager.getConnection(dbParameters);
             Statement stmt = cn.createStatement();
-            String sql = "SELECT * FROM calar.producto WHERE nombre_producto = \"" + nombreProducto + "\" and user_id = \"" + email + "\";";
+            String sql = "SELECT * FROM producto WHERE nombre_producto = \"" + nombreProducto + "\" and user_id = \"" + email + "\";";
             ResultSet rs = stmt.executeQuery(sql);
             boolean exists = rs.next(); // Comprobamos si hay alguna fila en el ResultSet
             cn.close(); // Cerramos la conexión
@@ -620,9 +629,9 @@ public class ConnectionDB {
         Map<Integer, String[]> productos = new HashMap<Integer, String[]>();
         
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
-            PreparedStatement statement = cn.prepareStatement("Select id, cantidad, coste, concepto, date from calar.gasto where user_id = \"" + email_ + "\";");
+            PreparedStatement statement = cn.prepareStatement("Select id, cantidad, coste, concepto, date from gasto where user_id = \"" + email_ + "\";");
             // Guardamos la query en resultado
             ResultSet resultado = statement.executeQuery();
             
@@ -636,15 +645,14 @@ public class ConnectionDB {
                 float coste = resultado.getFloat("coste");
                 String concepto = resultado.getString("concepto");
                 
-                Timestamp timestamp = resultado.getTimestamp("date");
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                String dateString = sdf.format(timestamp);
+                String date = resultado.getString("date");
+                
                 
                 String idStr = String.valueOf(id);
                 String cantidadStr = String.valueOf(cantidad);
                 String costeStr = String.valueOf(coste);
                 
-                productos.put(contador, new String[]{idStr, cantidadStr, costeStr, concepto, dateString});
+                productos.put(contador, new String[]{idStr, cantidadStr, costeStr, concepto, date});
                 contador ++;   
             }
             
@@ -664,7 +672,7 @@ public class ConnectionDB {
         float gastoTotal = 0;
         
         try {
-            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
             PreparedStatement statement = cn.prepareStatement("select sum(total_cost) AS total from factura where user_id = \"" + email_ + "\";");
             // Guardamos la query en resultado
@@ -678,7 +686,7 @@ public class ConnectionDB {
             resultado.close(); // Cerramos el resultSet
             cn.close(); // Cerramos conexión.
             
-            Connection cn1 = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);         
+            Connection cn1 = DriverManager.getConnection(dbParameters);         
             // Operaciones:
             PreparedStatement statement1 = cn1.prepareStatement("select sum(coste) AS total from gasto where user_id = \"" + email_ + "\";");
             // Guardamos la query en resultado
