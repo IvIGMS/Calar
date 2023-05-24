@@ -171,25 +171,35 @@ public class ConnectionDB {
         }
         
         return retorno;
-    }
+    }  
     
-    public static void dropProduct(String name, String email){
+    public static boolean existProduct(String name, String email){
         // Introducir un user previamente validado a la bbdd.
+        boolean retorno = true;
+        
         try {
             System.out.println("Estamos en el try");
             Connection cn = DriverManager.getConnection(dbParameters);
             System.out.println("Se ha conectado correctamente");
             
-            // Operaciones:
-            Statement stmt = cn.createStatement();
-            String sql = "DELETE FROM producto WHERE nombre_producto = \"" + name + "\" AND user_id = \"" + email + "\";";
-            stmt.executeUpdate(sql);      
-            System.out.println("El producto se ha eliminado correctamente");
+            
+            // Guardamos la query en resultado
+            PreparedStatement statement = cn.prepareStatement("SELECT nombre_producto FROM producto WHERE nombre_producto = \"" + name + "\" AND user_id = \"" + email + "\";");
+            ResultSet resultado = statement.executeQuery();
+            
+            // Cogemos la primera tupla de que nos arroja la query.
+            resultado.next();
+            String productName = resultado.getString(1);
+            System.out.println("Nombre del producto que queremos meter a la linea de factura: " + productName);
+            statement.close(); // Cerramos statement
             cn.close(); // Cerramos conexión.
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(null, "Has introducido un producto que no existe");
+            retorno = false;
         }
+        
+        return retorno;
     }
     
     public static ArrayList<String> getGreeting(){

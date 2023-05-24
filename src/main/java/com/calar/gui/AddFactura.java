@@ -186,12 +186,18 @@ public class AddFactura extends javax.swing.JFrame {
             System.out.println("Cantidad producto" + precioTotal);
 
             // Aqui va un if
-            precio_acumulado += precioTotal;
-            System.out.println(precio_acumulado);
+            
+            
+            boolean existProduct = ConnectionDB.existProduct(nombreProducto, user.getEmail());
+            
+            if(existProduct){
+                precio_acumulado += precioTotal;
+                System.out.println(precio_acumulado);
 
-            LineaFactura lin = new LineaFactura(id_factura, nombreProducto, cantidadProducto, precioTotal);
-            // Insertamos la linea de factura en la bbdd.
-            ConnectionDB.insertarLineaFactura(lin, user.getEmail());
+                LineaFactura lin = new LineaFactura(id_factura, nombreProducto, cantidadProducto, precioTotal);
+                // Insertamos la linea de factura en la bbdd.
+                ConnectionDB.insertarLineaFactura(lin, user.getEmail());
+            }
         } else {
             JOptionPane.showMessageDialog(null, "La cantidad tiene que ser mayor que 0");
         }
