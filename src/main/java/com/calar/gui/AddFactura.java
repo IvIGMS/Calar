@@ -31,8 +31,6 @@ public class AddFactura extends javax.swing.JFrame {
         this.id_factura = id_factura;
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        
     }
 
     /**
