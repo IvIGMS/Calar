@@ -185,8 +185,7 @@ public class AddFactura extends javax.swing.JFrame {
             float precioTotal = cantidadProducto * precioProducto;
             System.out.println("Cantidad producto" + precioTotal);
 
-            // Aqui va un if
-            
+            // Comprobamos si existe el producto para poder meterlo en la linea de factura.
             
             boolean existProduct = ConnectionDB.existProduct(nombreProducto, user.getEmail());
             
@@ -197,6 +196,8 @@ public class AddFactura extends javax.swing.JFrame {
                 LineaFactura lin = new LineaFactura(id_factura, nombreProducto, cantidadProducto, precioTotal);
                 // Insertamos la linea de factura en la bbdd.
                 ConnectionDB.insertarLineaFactura(lin, user.getEmail());
+                // Modificamos existencias.
+                ConnectionDB.modificarExistencias(nombreProducto, cantidadProducto);
             }
         } else {
             JOptionPane.showMessageDialog(null, "La cantidad tiene que ser mayor que 0");

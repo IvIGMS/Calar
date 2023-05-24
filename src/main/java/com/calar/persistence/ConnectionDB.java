@@ -171,7 +171,26 @@ public class ConnectionDB {
         }
         
         return retorno;
-    }  
+    }
+
+    public static void dropProduct(String name, String email){
+        // Introducir un user previamente validado a la bbdd.
+        try {
+            System.out.println("Estamos en el try");
+            Connection cn = DriverManager.getConnection(URL_DB, USUARIO_DB, PASSWORD_DB);
+            System.out.println("Se ha conectado correctamente");
+            
+            // Operaciones:
+            Statement stmt = cn.createStatement();
+            String sql = "DELETE FROM calar.producto WHERE nombre_producto = \"" + name + "\" AND user_id = \"" + email + "\";";
+            stmt.executeUpdate(sql);      
+            System.out.println("El producto se ha eliminado correctamente");
+            cn.close(); // Cerramos conexión.
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Has introducido un producto que no existe");
+        }
+    }
     
     public static boolean existProduct(String name, String email){
         // Introducir un user previamente validado a la bbdd.
@@ -201,6 +220,32 @@ public class ConnectionDB {
         
         return retorno;
     }
+    
+    
+    public static boolean modificarExistencias(String productName, int existencias){
+        // Introducir un user previamente validado a la bbdd.
+        boolean retorno = true;
+        try {
+            System.out.println("Estamos en el try");
+            Connection cn = DriverManager.getConnection(dbParameters);
+            System.out.println("Se ha conectado correctamente");
+            
+            // Operaciones:
+            Statement stmt = cn.createStatement();
+            String sql = "UPDATE producto SET existencias = existencias - " + existencias + " WHERE nombre_producto = \"" + productName + "\";";
+            System.out.println(sql);
+            stmt.executeUpdate(sql);      
+            System.out.println("Existencias actualizadas");
+            cn.close(); // Cerramos conexión.
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "No se han podido actualizar las existencias");
+            retorno = false;
+        }
+        
+        return retorno;
+    } 
+    
     
     public static ArrayList<String> getGreeting(){
         
@@ -720,4 +765,3 @@ public class ConnectionDB {
         return ingresoTotal - gastoTotal;
     }
 }
-
