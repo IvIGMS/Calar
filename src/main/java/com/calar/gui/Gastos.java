@@ -18,7 +18,7 @@ public class Gastos extends JFrame {
         // Configuración del JFrame
         setTitle("Gastos proveedores");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 800);
+        setSize(1080, 800);
         setResizable(false);
         
         gastos = ConnectionDB.getGastos(user.getEmail());  

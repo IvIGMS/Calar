@@ -131,11 +131,20 @@ public class DropProduct extends javax.swing.JFrame {
         // VALIDAMOS NOMBRE Y PRECIO
         if (Validations.validateName(nombreProducto) ){
             
-            ConnectionDB.dropProduct(nombreProducto, user_idProducto);
-            ImageIcon imagenOriginal = new ImageIcon("images/delete.png");
-            Image imagenRedimensionada = imagenOriginal.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(imagenRedimensionada);
-            JOptionPane.showMessageDialog(null, "El producto \"" + nombreProducto +"\" se ha elimnado correctamente", "Eliminar producto", JOptionPane.INFORMATION_MESSAGE, icon);            
+            boolean exists;
+            
+            exists = ConnectionDB.dropProduct(nombreProducto, user_idProducto);
+            
+            if (exists){
+                ImageIcon imagenOriginal = new ImageIcon("images/delete.png");
+                Image imagenRedimensionada = imagenOriginal.getImage().getScaledInstance(75, 75, Image.SCALE_SMOOTH);
+                ImageIcon icon = new ImageIcon(imagenRedimensionada);
+                JOptionPane.showMessageDialog(null, "El producto \"" + nombreProducto +"\" se ha elimnado correctamente", "Eliminar producto", JOptionPane.INFORMATION_MESSAGE, icon); 
+            } else {
+                System.out.println("No existe el producto introducido");
+            }
+            
+                        
         } else {
             JOptionPane.showMessageDialog(null, "Error al introducir los datos.");
         }  
