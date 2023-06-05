@@ -9,7 +9,7 @@ import java.util.Map;
 public class Facturas extends JFrame {
 
     private JPanel panel;
-    private Map<Integer, Float> facturas = new HashMap<Integer, Float>();
+    private Map<Integer, Object[]> facturas = new HashMap<Integer, Object[]>();
     private Map<Integer, String[]> lineas = new HashMap<Integer, String[]>();
     private JButton exitButton;
     private JButton addButton;
@@ -38,11 +38,13 @@ public class Facturas extends JFrame {
         Font font2 = new Font("Arial", Font.PLAIN, 18);
 
         // Agregar cada fruta a un panel con GridLayout (3,1) y agregarlo al panel principal
-        for (Map.Entry<Integer, Float> factura : facturas.entrySet()) {
+        for (Map.Entry<Integer, Object[]> factura : facturas.entrySet()) {
             
 
             String id_factura = String.valueOf(factura.getKey());
-            String precio_total = String.valueOf(factura.getValue());
+            Object[] valoresFactura = factura.getValue();
+            String precio_total = String.valueOf(valoresFactura[0]);
+            String date = String.valueOf(valoresFactura[1]);
             
             // Panel
             JPanel prodPanel = new JPanel(new GridLayout(0,1, 10, 10));
@@ -55,8 +57,8 @@ public class Facturas extends JFrame {
             prodPanel.add(id_);
             
                 // FECHA
-            String dateText = ConnectionDB.getDateFactura(Integer.parseInt(id_factura));
-            JLabel date_ = new JLabel(dateText);
+            
+            JLabel date_ = new JLabel(date);
             date_.setHorizontalAlignment(JLabel.CENTER);
             date_.setFont(font2); // Fijar el tamaño de la fuente
             prodPanel.add(date_);
@@ -78,8 +80,6 @@ public class Facturas extends JFrame {
                     valor_linea.setFont(font2); // Fijar el tamaño de la fuente
                     prodPanel.add(valor_linea);
                     contador ++;
-                    
-                    
                 }
  
             }

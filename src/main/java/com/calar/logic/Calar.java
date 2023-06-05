@@ -6,6 +6,8 @@ package com.calar.logic;
 
 import com.calar.gui.Login;
 import com.calar.gui.Productos;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,17 +19,10 @@ public class Calar {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        // Vamos a llamar a nuestra pantalla de inicio, que en este caso es el login
-        
         
         Login login = new Login();
         login.setVisible(true);
         login.setLocationRelativeTo(null);
-        /*
-        Productos productos = new Productos(new User("a","b","c"));
-        productos.setVisible(true);
-        productos.setLocationRelativeTo(null);
-        */
+        
     }
 }
