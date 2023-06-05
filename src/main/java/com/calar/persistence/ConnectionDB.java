@@ -5,6 +5,7 @@
 package com.calar.persistence;
 
 
+import com.calar.logic.Calar;
 import com.calar.logic.LineaFactura;
 import com.calar.logic.Product;
 import com.calar.logic.User;
@@ -13,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,8 +28,7 @@ public class ConnectionDB {
     private static final String USUARIO_DB = "ivan@frias";
     private static final String PASSWORD_DB = "$tcabberR1";
     */
-    private static final String dbPath = System.getProperty("user.home") + "/calar.db";
-    private static final String dbParameters = "jdbc:sqlite:" + dbPath;
+    private static final String dbParameters = "jdbc:sqlite:src/main/resources/calar.db";
 
     
     public static void testConnection() {
@@ -63,6 +65,7 @@ public class ConnectionDB {
     
     public static boolean login(String email_, String password_){
         try {
+            Class.forName("org.sqlite.JDBC");
             Connection cn = DriverManager.getConnection(dbParameters);         
             // Operaciones:
             PreparedStatement statement = cn.prepareStatement("Select * from user where mail = '" + email_ + "'");
@@ -83,6 +86,9 @@ public class ConnectionDB {
             
         } catch (SQLException ex) {
             System.out.println("Error al conectarse a la bbdd" + ex.getMessage());
+            return false;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ConnectionDB.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
