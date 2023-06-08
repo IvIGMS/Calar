@@ -49,7 +49,7 @@
             <resource>
                 <directory>/</directory>
                 <includes>
-                    <include>db.db</include> <!-- Asegúrate de incluir la extensión correcta de tu archivo de base de datos -->
+                    <include>db.db</include>
                 </includes>
             </resource>
         </resources>
